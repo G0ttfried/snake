@@ -8,9 +8,9 @@ namespace snake
 {
     class Point
     {
-        int X { get; set; }
-        int Y { get; set; }
-        char Sym  { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public char Sym  { get; set; }
 
         public Point() { }
 
@@ -28,10 +28,21 @@ namespace snake
             Sym = p.Sym;
         }
 
+        public void Clear()
+        {
+            Sym = ' ';
+            Draw();
+        }
+
         public void Draw()
         {
             Console.SetCursorPosition(X, Y);
             Console.Write(Sym);
+        }
+
+        public bool IsHit(Point p)
+        {
+            return (p.X == X) && (p.Y == Y);
         }
 
         public void Move(int offset, Direction direction)

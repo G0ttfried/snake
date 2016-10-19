@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Snake
@@ -11,16 +12,39 @@ namespace Snake
     {
         static void Main(string[] args)
         {
-            HorizontalLine hLine = new HorizontalLine(5, 10, 7, '*');
-            hLine.Draw();
-
-            VerticalLine vLine = new VerticalLine(3, 8, 12, '*');
-            vLine.Draw();
+            Walls walls = new Walls(80, 25);
+            walls.Draw();
 
             Snak snake = new Snak(new Point(15, 15, '*'), 5, Direction.RIGHT);
             snake.Draw();
 
-            Console.ReadKey();
+            FoodCreator foodCreator = new FoodCreator(80, 25, '$');
+            Point food = foodCreator.CreateFood();
+            food.Draw();
+
+            while (true)
+            {
+                if (walls.IsHit(snake) || snake.IsHitTail())
+                {
+                    break;
+                }
+                if (snake.Eat(food))
+                {
+                    food = foodCreator.CreateFood();
+                    food.Draw();
+                }
+                else
+                {
+                    snake.Move();
+                }
+                Thread.Sleep(100);
+
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey();
+                    snake.HandleKey(key.Key);
+                }
+            }
         }
     }
 }
